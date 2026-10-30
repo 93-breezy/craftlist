@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101611">
+  <title>CraftList – Minecraft Build Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="CraftList Startseite">
+        <span class="brand-mark">C<span>+</span></span>
+        <span><strong>CraftList</strong><small>BUILD PLANNER</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" id="navProjects"><span class="nav-icon">▦</span> Meine Projekte <span class="nav-count" id="projectCount">0</span></button>
+      <button class="nav-item" id="navAdd"><span class="nav-icon">＋</span> Tutorial hinzufügen</button>
+      <div class="sidebar-bottom">
+        <div class="side-tip">
+          <div class="tip-icon">⛏</div>
+          <strong>Dein nächstes Bauprojekt wartet.</strong>
+          <p>Material sammeln. Fortschritt tracken. Losbauen.</p>
+        </div>
+        <div class="sidebar-foot"><span class="online-dot"></span> Lokal gespeichert <span class="version">v1.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumb">WORKSPACE <span>/</span> <b id="breadcrumbCurrent">Meine Projekte</b></div>
+        <div class="top-actions"><span class="save-indicator"><i></i> Automatisch gespeichert</span><div class="avatar">CL</div></div>
+      </header>
+
+      <section class="view active" id="projectsView">
+        <div class="hero-row">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> DEINE MINECRAFT WELT</div><h1>Meine <em>Projekte.</em></h1><p class="subtitle">Alle Bauvorhaben an einem Ort. Plane deine Materialien und behalte den Überblick.</p></div>
+          <button class="primary-btn" id="newProjectBtn"><span>＋</span> Tutorial hinzufügen</button>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>PROJEKTE</span><span class="stat-symbol">▦</span></div><strong id="statProjects">0</strong><small>Gespeicherte Bauvorhaben</small></article>
+          <article class="stat-card"><div class="stat-top"><span>MATERIALIEN</span><span class="stat-symbol">▤</span></div><strong id="statMaterials">0</strong><small>Verschiedene Materialtypen</small></article>
+          <article class="stat-card"><div class="stat-top"><span>GESAMTFORTSCHRITT</span><span class="stat-symbol">◴</span></div><strong id="statProgress">0%</strong><small>Über alle Projekte hinweg</small></article>
+        </div>
+        <div class="section-heading"><div><h2>Deine Bauvorhaben</h2><p>Wähle ein Projekt, um deine Materialliste zu verwalten.</p></div><div class="search-wrap"><span>⌕</span><input id="projectSearch" placeholder="Projekt suchen …"></div></div>
+        <div class="project-grid" id="projectGrid"></div>
+        <div class="empty-state" id="emptyProjects"><div class="empty-cube">▧</div><h3>Noch keine Projekte</h3><p>Füge dein erstes YouTube-Baututorial hinzu und lass CraftList die Materialien analysieren.</p><button class="primary-btn" id="emptyAddBtn">＋ Erstes Projekt erstellen</button></div>
+      </section>
+
+      <section class="view" id="detailView">
+        <button class="back-link" id="backProjects">← Alle Projekte</button>
+        <div class="detail-head">
+          <div class="detail-title"><div class="eyebrow"><span class="eyebrow-line"></span> PROJEKTÜBERSICHT</div><h1 id="detailName">Projekt</h1><p class="subtitle" id="detailSummary">Deine Materialliste und dein Sammelfortschritt.</p></div>
+          <div class="detail-actions"><button class="outline-btn" id="openVideoBtn">▶ Video ansehen</button><button class="outline-btn" id="exportBtn">↓ CSV exportieren</button><button class="icon-btn danger-hover" id="deleteProjectBtn" title="Projekt löschen">⌫</button></div>
+        </div>
+        <div class="detail-layout">
+          <div class="detail-main">
+            <div class="progress-panel">
+              <div class="progress-top"><div><span class="panel-kicker">SAMMELFORTSCHRITT</span><div class="progress-number"><strong id="detailPercent">0%</strong><span id="detailCollected">0 von 0 Blöcken gesammelt</span></div></div><div class="progress-ring" id="progressRing"><span id="ringPercent">0%</span></div></div>
+              <div class="progress-track"><div id="progressFill"></div></div>
+              <div class="progress-bottom"><span><i class="legend-dot done"></i> Gesammelt <b id="collectedCount">0</b></span><span><i class="legend-dot todo"></i> Noch benötigt <b id="remainingCount">0</b></span></div>
+            </div>
+            <div class="materials-panel">
+              <div class="materials-header"><div><span class="panel-kicker">RESSOURCEN</span><h2>Materialliste <span id="materialTypeCount">0</span></h2></div><button class="primary-btn compact" id="addMaterialBtn">＋ Material</button></div>
+              <div class="list-tools"><div class="filter-tabs"><button class="filter-tab active" data-filter="all">Alle</button><button class="filter-tab" data-filter="missing">Fehlend</button><button class="filter-tab" data-filter="done">Vollständig</button></div><div class="search-wrap small"><span>⌕</span><input id="materialSearch" placeholder="Material suchen …"></div></div>
+              <div id="materialsList"></div>
+              <div class="list-empty" id="emptyMaterials">Keine Materialien gefunden.</div>
+            </div>
+          </div>
+          <aside class="detail-side">
+            <div class="video-card"><div class="side-card-head"><span class="panel-kicker">TUTORIAL</span><span class="video-dot">●</span></div><div class="video-frame" id="videoFrame"><div class="video-placeholder">▶</div></div><div class="video-card-body"><strong id="videoTitle">YouTube-Tutorial</strong><a id="videoLink" href="#" target="_blank" rel="noopener">Auf YouTube öffnen ↗</a></div></div>
+            <div class="tip-card"><div class="tip-icon">✦</div><strong>CraftList Tipp</strong><p>Trage bei jedem Material ein, wie viele Blöcke du bereits gesammelt hast. Dein Fortschritt wird automatisch aktualisiert.</p></div>
+            <div class="warning-card" id="analysisWarnings" hidden><strong>Hinweise zur Analyse</strong><ul id="warningList"></ul></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="addView">
+        <button class="back-link" id="backFromAdd">← Zurück zu Projekten</button>
+        <div class="add-intro"><div class="eyebrow"><span class="eyebrow-line"></span> NEUES BAUPROJEKT</div><h1>Was bauen <em>wir heute?</em></h1><p class="subtitle">Füge dein YouTube-Tutorial ein. Die KI schaut sich das Video an und erstellt einen ersten Materialplan.</p></div>
+        <div class="analyzer-card">
+          <div class="analyzer-step"><span>01</span><div><strong>YouTube-Link einfügen</strong><small>Öffentliche Minecraft-Tutorials werden unterstützt.</small></div></div>
+          <label class="field-label" for="youtubeUrl">YOUTUBE-VIDEO-URL</label>
+          <div class="url-input-row"><span class="youtube-icon">▶</span><input id="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="url"><button id="previewBtn" class="outline-btn">Vorschau</button></div>
+          <div class="video-preview" id="videoPreview" hidden><div id="previewEmbed"></div><div class="preview-caption"><span class="online-dot"></span> Video erkannt – bereit zur Analyse</div></div>
+          <div class="analyzer-divider"><span>KI-ANALYSE</span></div>
+          <div class="analyzer-step"><span>02</span><div><strong>Materialliste automatisch erstellen</strong><small>Die KI erkennt Blöcke, Mengen und Kategorien im Tutorial.</small></div></div>
+          <div class="analysis-info"><span>✦</span><p>Die Analyse nutzt Video- und Audioinformationen. Mengen können Schätzungen sein – du kannst später alles bearbeiten.</p></div>
+          <button class="analyze-btn" id="analyzeBtn"><span>✦</span> Video analysieren & Materialliste erstellen <b>→</b></button>
+          <div class="analyze-status" id="analyzeStatus" role="status"></div>
+          <div class="api-note" id="apiNote" hidden>Die KI ist noch nicht eingerichtet. Bitte richte den Gemini API-Schlüssel gemäß README ein. Du kannst CraftList trotzdem mit manuellen Materialien verwenden.</div>
+        </div>
+        <div class="manual-option"><span>ODER</span><button id="manualCreateBtn">Projekt ohne KI-Analyse manuell erstellen <span>→</span></button></div>
+      </section>
+      <footer class="main-footer"><span>CRAFTLIST <b>•</b> MADE FOR BUILDERS</span><span>Deine Daten bleiben lokal in diesem Browser.</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="materialModal" hidden>
+    <form class="modal" id="materialForm">
+      <button type="button" class="modal-close" data-close>×</button><div class="eyebrow"><span class="eyebrow-line"></span> MATERIAL VERWALTEN</div><h2 id="modalTitle">Material hinzufügen</h2>
+      <input type="hidden" id="editMaterialId">
+      <label class="field-label" for="materialName">MATERIALNAME</label><input class="text-field" id="materialName" required maxlength="90" placeholder="z. B. Fichtenholzbretter">
+      <div class="form-two"><div><label class="field-label" for="materialQuantity">BENÖTIGTE MENGE</label><input class="text-field" id="materialQuantity" type="number" min="1" step="1" value="64" required></div><div><label class="field-label" for="materialHave">BEREITS GESAMMELT</label><input class="text-field" id="materialHave" type="number" min="0" step="1" value="0" required></div></div>
+      <div class="form-two"><div><label class="field-label" for="materialCategory">KATEGORIE</label><select class="text-field" id="materialCategory"><option>Baublöcke</option><option>Holz</option><option>Glas</option><option>Dekoration</option><option>Redstone</option><option>Sonstiges</option></select></div><div><label class="field-label" for="materialUnit">EINHEIT</label><select class="text-field" id="materialUnit"><option>Blöcke</option><option>Stapel</option><option>Items</option><option>Stück</option></select></div></div>
+      <div class="modal-actions"><button type="button" class="outline-btn" data-close>Abbrechen</button><button class="primary-btn" type="submit">Speichern</button></div>
+    </form>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
